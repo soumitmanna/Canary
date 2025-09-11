@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canary - Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+  --color-primary: #f4f9e9;
+  --color-secondary: #5a3e1b;
+  --color-light: #ffffff;
+  --color-accent: #f4f9e9;
+  --color-dark: #3c2a12;
+  --color-danger: #e74c3c;
+  --color-success: #2ecc71;
+}
+
+body {
+  background: linear-gradient(135deg, #f4f9e9);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-dark);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(#f4f9e9)
+  color: var(--color-dark);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+}
+.logo img {
+  height: 50px;
+  width: 50px;
+  margin-right: 15px;
+  border-radius: 8px;
+}
+.logo h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Layout */
+.dashboard {
+  display: flex;
+  flex: 1;
+}
+.sidebar {
+  width: 250px;
+  background: var(--color-dark);
+  padding: 2rem 1rem;
+  color: var(--color-light);
+}
+.sidebar-menu {
+  list-style: none;
+  margin-top: 2rem;
+}
+.sidebar-menu a {
+  color: linear-gradient(#f4f9e9);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+.sidebar-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-primary);
+}
+.sidebar-menu a.active {
+  background-color: rgba(242, 185, 40, 0.2);
+  color: var(--color-primary);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+.dashboard-header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-dark);
+}
+
+/* Tabs */
+.settings-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+.tab-btn:hover {
+  background: rgba(242, 185, 40, 0.2);
+  color: var(--color-dark);
+}
+.tab-btn.active {
+  background: var(--color-primary);
+  color: var(--color-dark);
+}
+
+/* Settings Cards */
+.settings-card {
+  background: var(--color-light);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.settings-card h3 {
+  margin-bottom: 1.5rem;
+  color: var(--color-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-dark);
+  font-weight: 500;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--color-dark);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.form-hint {
+  font-size: 0.85rem;
+  color: var(--color-dark);
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+
+/* Toggles */
+.toggle-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+.toggle-switch input { display: none; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ddd;
+  border-radius: 34px;
+  transition: .4s;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: var(--color-primary);
+}
+input:checked + .slider:before {
+  transform: translateX(30px);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+.btn-primary {
+  background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+  color: var(--color-dark);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(242, 185, 40, 0.4);
+}
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-dark);
+}
+.btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.btn-danger {
+  background: rgba(231, 76, 60, 0.2);
+  color: var(--color-danger);
+}
+.btn-danger:hover {
+  background: rgba(231, 76, 60, 0.3);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--color-dark);
+  color: var(--color-light);
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard { flex-direction: column; }
+  .sidebar { width: 100%; padding: 1rem; }
+  .sidebar-menu { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+}
+@media (max-width: 600px) {
+  header { flex-direction: column; text-align: center; gap: 1rem; }
+  .settings-tabs { flex-direction: column; }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="logo3.jpg" alt="Canary Logo">
+      <h1>Canary Inc.</h1>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">JD</div>
+      <div>
+        <p>John Doe</p>
+        <small>john.doe@example.com</small>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Dashboard Menu</h3>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html"><i class="fas fa-home"></i> Overview</a></li>
+        <li><a href="aliases.html"><i class="fas fa-envelope"></i> Aliases</a></li>
+        <li><a href="protection.html"><i class="fas fa-shield-alt"></i> Protection</a></li>
+        <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+        <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+        <li><a href="#" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="dashboard-header">
+        <h2>Account Settings</h2>
+        <p>Manage your account preferences and security settings</p>
+      </div>
+      
+      <!-- Settings Tabs -->
+      <div class="settings-tabs">
+        <button class="tab-btn active" data-tab="profile">Profile</button>
+        <button class="tab-btn" data-tab="security">Security</button>
+        <button class="tab-btn" data-tab="notifications">Notifications</button>
+        <button class="tab-btn" data-tab="privacy">Privacy</button>
+        <button class="tab-btn" data-tab="billing">Billing</button>
+        <button class="tab-btn" data-tab="api">API</button>
+      </div>
+      
+      <!-- Profile Settings -->
+      <div class="settings-content active" id="profile-content">
+        <div class="settings-card">
+          <h3><i class="fas fa-user"></i> Personal Information</h3>
+          
+          <div class="form-group">
+            <label for="profileName">Full Name</label>
+            <input type="text" id="profileName" value="John Doe">
+          </div>
+          
+          <div class="form-group">
+            <label for="profileEmail">Email Address</label>
+            <input type="email" id="profileEmail" value="john.doe@example.com">
+            <p class="form-hint">This is the email address we'll use to contact you</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="profileCompany">Company (Optional)</label>
+            <input type="text" id="profileCompany" placeholder="Your company name">
+          </div>
+          
+          <div class="form-actions">
+            <button class="btn btn-primary">Save Changes</button>
+            <button class="btn btn-secondary">Discard Changes</button>
+          </div>
+        </div>
+        
+        <div class="settings-card">
+          <h3><i class="fas fa-image"></i> Profile Picture</h3>
+          
+          <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2rem;">JD</div>
+            <div>
+              <button class="btn btn-secondary">
+                <i class="fas fa-upload"></i> Upload New Photo
+              </button>
+              <p class="form-hint">Recommended: Square JPG or PNG, at least 200x200 pixels</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Security Settings -->
+      <div class="settings-content" id="security-content">
+        <div class="settings-card">
+          <h3><i class="fas fa-lock"></i> Password</h3>
+          
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword">
+          </div>
+          
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword">
+            <p class="form-hint">Use at least 8 characters with a mix of letters, numbers & symbols</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" id="confirmPassword">
+          </div>
+          
+          <div class="form-actions">
+            <button class="btn btn-primary">Update Password</button>
+          </div>
+        </div>
+        
+        <div class="settings-card">
+          <h3><i class="fas fa-shield-alt"></i> Two-Factor Authentication</h3>
+          <p>Add an extra layer of security to your account by enabling two-factor authentication.</p>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Two-Factor Authentication</h4>
+              <p>Require a verification code when signing in</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="twoFactorToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="two-factor-setup" id="twoFactorSetup" style="display: none;">
+            <h4>Set up two-factor authentication</h4>
+            <p>Scan this QR code with your authenticator app:</p>
+            
+            <div class="qrcode-container">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=otpauth://totp/Canary:john.doe@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Canary" alt="QR Code">
+            </div>
+            
+            <p>Or enter this secret key manually: <strong>JBSWY3DPEHPK3PXP</strong></p>
+            
+            <div class="form-group">
+              <label for="verificationCode">Verification Code</label>
+              <input type="text" id="verificationCode" placeholder="Enter 6-digit code">
+            </div>
+            
+            <button class="btn btn-primary">Verify and Enable</button>
+            
+            <div class="backup-codes">
+              <h4>Backup Codes</h4>
+              <p>Save these codes in a secure place. Each code can be used only once.</p>
+              <div>1. 7A92-8B4C-D3E1</div>
+              <div>2. F5A9-2B8C-7D1E</div>
+              <div>3. 3C8A-1B9D-4E7F</div>
+              <div>4. 9D2A-5B1C-8E3F</div>
+              <div>5. 2B8C-7D1E-9F3A</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-card">
+          <h3><i class="fas fa-desktop"></i> Active Sessions</h3>
+          <p>These are the devices that are currently logged into your account.</p>
+          
+          <div class="active-session">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(252, 253, 252, 0.1);">
+              <div>
+                <h4>Chrome on Windows</h4>
+                <p>New York, USA • Current session</p>
+                <p class="form-hint">Last active: Just now</p>
+              </div>
+              <button class="btn btn-secondary">Revoke</button>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(252, 253, 252, 0.1);">
+              <div>
+                <h4>Safari on macOS</h4>
+                <p>San Francisco, USA</p>
+                <p class="form-hint">Last active: 2 days ago</p>
+              </div>
+              <button class="btn btn-secondary">Revoke</button>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+              <div>
+                <h4>Firefox on Linux</h4>
+                <p>London, UK</p>
+                <p class="form-hint">Last active: 1 week ago</p>
+              </div>
+              <button class="btn btn-secondary">Revoke</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Notification Settings -->
+      <div class="settings-content" id="notifications-content">
+        <div class="settings-card">
+          <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+          <p>Choose how you want to be notified about important events.</p>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Email Notifications</h4>
+              <p>Receive security alerts via email</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailNotifications" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Push Notifications</h4>
+              <p>Receive instant alerts on your devices</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="pushNotifications" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>SMS Alerts</h4>
+              <p>Get critical alerts via text message</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="smsNotifications">
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Monthly Reports</h4>
+              <p>Receive monthly security reports</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="monthlyReports" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="settings-card">
+          <h3><i class="fas fa-envelope"></i> Alert Types</h3>
+          <p>Select which types of alerts you want to receive.</p>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Data Breach Alerts</h4>
+              <p>Get notified when your aliases appear in data breaches</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="breachAlerts" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Suspicious Activity</h4>
+              <p>Receive alerts about suspicious login attempts</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="suspiciousActivityAlerts" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Product Updates</h4>
+              <p>Get notified about new features and improvements</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="productUpdateAlerts" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Privacy Settings -->
+      <div class="settings-content" id="privacy-content">
+        <div class="settings-card">
+          <h3><i class="fas fa-user-secret"></i> Privacy Settings</h3>
+          <p>Control how your data is collected and used.</p>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Data Collection</h4>
+              <p>Allow us to collect anonymous usage data to improve our services</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="dataCollection" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Personalized Recommendations</h4>
+              <p>Receive personalized security recommendations based on your usage</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="personalizedRecommendations" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <h4>Third-Party Sharing</h4>
+              <p>Allow anonymized data sharing with security research partners</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="thirdPartySharing">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="settings-card">
+          <h3><i class="fas fa-download"></i> Data Export</h3>
+          <p>Download a copy of your personal data stored in our systems.</p>
+          
+          <button class="btn btn-secondary">
+            <i class="fas fa-download"></i> Export My Data
+          </button>
+          <p class="form-hint">This may take a few minutes to process. You'll receive an email when your data is ready to download.</p>
+        </div>
+        
+        <div class="settings-card danger-zone">
+          <h3><i class="fas fa-trash"></i> Data Deletion</h3>
+          <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+          
+          <button class="btn btn-danger">
+            <i class="fas fa-exclamation-triangle"></i> Delete My Account
+          </button>
+          <p class="form-hint">Once you delete your account, there is no going back. Please be certain.</p>
+        </div>
+      </div>
+      
+      <!-- Additional settings content for Billing and API would go here -->
+      
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p>⚡Canary — Stay ahead of the leaks.</p>
+  </footer>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    <i class="fas fa-info-circle"></i>
+    <span id="notificationText"></span>
+  </div>
+
+  <script>
+    // API endpoints (using JSONPlaceholder for demonstration)
+    const API_BASE = 'https://jsonplaceholder.typicode.com';
+    const SETTINGS_ENDPOINT = '/posts/1'; // Simulating settings endpoint
+    
+    // State management
+    let appState = {
+      settings: null,
+      isLoading: true
+    };
+    
+    // DOM elements
+    const elements = {
+      notification: document.getElementById('notification'),
+      notificationText: document.getElementById('notificationText'),
+      twoFactorToggle: document.getElementById('twoFactorToggle'),
+      twoFactorSetup: document.getElementById('twoFactorSetup')
+    };
+    
+    // Show notification
+    function showNotification(message, type = 'info') {
+      elements.notificationText.textContent = message;
+      elements.notification.className = `notification ${type} show`;
+      
+      setTimeout(() => {
+        elements.notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up tab navigation
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.settings-content');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const tabId = button.getAttribute('data-tab');
+          
+          // Update active tab
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          // Show corresponding content
+          tabContents.forEach(content => content.classList.remove('active'));
+          document.getElementById(`${tabId}-content`).classList.add('active');
+        });
+      });
+      
+      // Two-factor authentication toggle
+      elements.twoFactorToggle.addEventListener('change', function() {
+        if (this.checked) {
+          elements.twoFactorSetup.style.display = 'block';
+        } else {
+          elements.twoFactorSetup.style.display = 'none';
+        }
+      });
+      
+      // Load initial settings
+      fetchSettings();
+    });
+    
+    // Fetch settings from API
+    async function fetchSettings() {
+      try {
+        appState.isLoading = true;
+        
+        // In a real app, this would be an actual API endpoint for settings
+        const response = await fetch(`${API_BASE}${SETTINGS_ENDPOINT}`);
+        const settingsData = await response.json();
+        
+        // Simulate our settings structure from the server
+        const serverSettings = {
+          profile: {
+            name: "John Doe",
+            email: "john.doe@example.com",
+            company: "",
+            avatar: "JD"
+          },
+          security: {
+            twoFactorEnabled: false,
+            activeSessions: [
+              { device: "Chrome on Windows", location: "New York, USA", current: true, lastActive: "Just now" },
+              { device: "Safari on macOS", location: "San Francisco, USA", current: false, lastActive: "2 days ago" },
+              { device: "Firefox on Linux", location: "London, UK", current: false, lastActive: "1 week ago" }
+            ]
+          },
+          notifications: {
+            email: true,
+            push: true,
+            sms: false,
+            monthlyReports: true,
+            breachAlerts: true,
+            suspiciousActivity: true,
+            productUpdates: true
+          },
+          privacy: {
+            dataCollection: true,
+            personalizedRecommendations: true,
+            thirdPartySharing: false
+          }
+        };
+        
+        // Update app state
+        appState.settings = serverSettings;
+        appState.isLoading = false;
+        
+        // Update UI
+        updateSettingsUI();
+        
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+        showNotification('Failed to load settings. Using default values.', 'error');
+        
+        // Settings would remain with their default HTML values
+      }
+    }
+    
+    // Update UI with settings data
+    function updateSettingsUI() {
+      if (!appState.settings) return;
+      
+      const settings = appState.settings;
+      
+      // Update profile form
+      document.getElementById('profileName').value = settings.profile.name;
+      document.getElementById('profileEmail').value = settings.profile.email;
+      document.getElementById('profileCompany').value = settings.profile.company || '';
+      
+      // Update security settings
+      document.getElementById('twoFactorToggle').checked = settings.security.twoFactorEnabled;
+      if (settings.security.twoFactorEnabled) {
+        elements.twoFactorSetup.style.display = 'block';
+      }
+      
+      // Update notification toggles
+      document.getElementById('emailNotifications').checked = settings.notifications.email;
+      document.getElementById('pushNotifications').checked = settings.notifications.push;
+      document.getElementById('smsNotifications').checked = settings.notifications.sms;
+      document.getElementById('monthlyReports').checked = settings.notifications.monthlyReports;
+      document.getElementById('breachAlerts').checked = settings.notifications.breachAlerts;
+      document.getElementById('suspiciousActivityAlerts').checked = settings.notifications.suspiciousActivity;
+      document.getElementById('productUpdateAlerts').checked = settings.notifications.productUpdates;
+      
+      // Update privacy toggles
+      document.getElementById('dataCollection').checked = settings.privacy.dataCollection;
+      document.getElementById('personalizedRecommendations').checked = settings.privacy.personalizedRecommendations;
+      document.getElementById('thirdPartySharing').checked = settings.privacy.thirdPartySharing;
+    }
+    
+    // Save settings to server
+    async function saveSettings() {
+      try {
+        // In a real app, this would be an actual API call
+        const response = await fetch(`${API_BASE}${SETTINGS_ENDPOINT}`, {
+          method: 'PATCH',
+          body: JSON.stringify(appState.settings),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        });
+        
+        await response.json();
+        showNotification('Settings saved successfully', 'success');
+        
+      } catch (error) {
+        console.error('Error saving settings:', error);
+        showNotification('Failed to save settings. Please try again.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

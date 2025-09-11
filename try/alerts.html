@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canary - Alerts</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    :root {
+      --color-primary: #f2b928;
+      --color-secondary: #143255;
+      --color-light: #fcfdfc;
+      --color-accent: #e6a117;
+      --color-dark: #0f2842;
+      --color-danger: #e74c3c;
+      --color-success: #2ecc71;
+      --color-warning: #f39c12;
+      --color-info: #3498db;
+      --color-purple: #9b59b6;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-dark) 100%);
+      color: var(--color-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background-color: rgba(20, 50, 85, 0.9);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo img {
+      height: 50px;
+      width: 50px;
+      margin-right: 15px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard {
+      display: flex;
+      flex: 1;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: rgba(20, 50, 85, 0.8);
+      padding: 2rem 1rem;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+      margin-top: 2rem;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 1rem;
+    }
+    
+    .sidebar-menu a {
+      color: var(--color-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar-menu a:hover {
+      background-color: rgba(242, 185, 40, 0.2);
+      color: var(--color-primary);
+    }
+    
+    .sidebar-menu a.active {
+      background-color: rgba(242, 185, 40, 0.3);
+      color: var(--color-primary);
+    }
+    
+    .sidebar-menu i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .dashboard-header h2 {
+      font-size: 1.8rem;
+      color: var(--color-primary);
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: rgba(252, 253, 252, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s;
+      min-height: 140px;
+    }
+    
+    .stat-card.loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-card i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--color-primary);
+    }
+    
+    .stat-card h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-card p {
+      color: #d1e0ef;
+      font-size: 0.9rem;
+    }
+    
+    /* Alert Controls */
+    .alert-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+      color: var(--color-secondary);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(242, 185, 40, 0.4);
+    }
+    
+    .btn-secondary {
+      background: rgba(252, 253, 252, 0.1);
+      color: var(--color-light);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(252, 253, 252, 0.2);
+    }
+    
+    .btn-danger {
+      background: rgba(231, 76, 60, 0.2);
+      color: var(--color-danger);
+    }
+    
+    .btn-danger:hover {
+      background: rgba(231, 76, 60, 0.3);
+    }
+    
+    /* Filter Controls */
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-select {
+      padding: 0.8rem 1rem;
+      border: 2px solid rgba(252, 253, 252, 0.2);
+      border-radius: 8px;
+      background: rgba(10, 30, 50, 0.5);
+      color: var(--color-light);
+      font-size: 1rem;
+      min-width: 150px;
+    }
+    
+    /* Alerts Container */
+    .alerts-container {
+      background: rgba(252, 253, 252, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .alerts-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .alerts-header h3 {
+      color: var(--color-primary);
+    }
+    
+    /* Alert Items */
+    .alert-item {
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      background: rgba(10, 30, 50, 0.3);
+      border-left: 4px solid var(--color-info);
+      transition: all 0.3s;
+    }
+    
+    .alert-item:hover {
+      transform: translateX(5px);
+      background: rgba(10, 30, 50, 0.5);
+    }
+    
+    .alert-item.critical {
+      border-left-color: var(--color-danger);
+      background: rgba(231, 76, 60, 0.1);
+    }
+    
+    .alert-item.warning {
+      border-left-color: var(--color-warning);
+      background: rgba(243, 156, 18, 0.1);
+    }
+    
+    .alert-item.success {
+      border-left-color: var(--color-success);
+      background: rgba(46, 204, 113, 0.1);
+    }
+    
+    .alert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+    
+    .alert-title {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .alert-icon {
+      font-size: 1.2rem;
+    }
+    
+    .alert-date {
+      color: #d1e0ef;
+      font-size: 0.9rem;
+    }
+    
+    .alert-content {
+      margin-bottom: 1rem;
+      color: #d1e0ef;
+    }
+    
+    .alert-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .alert-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .alert-btn-primary {
+      background: rgba(242, 185, 40, 0.2);
+      color: var(--color-primary);
+    }
+    
+    .alert-btn-primary:hover {
+      background: rgba(242, 185, 40, 0.3);
+    }
+    
+    .alert-btn-secondary {
+      background: rgba(252, 253, 252, 0.1);
+      color: var(--color-light);
+    }
+    
+    .alert-btn-secondary:hover {
+      background: rgba(252, 253, 252, 0.2);
+    }
+    
+    /* Loading animation */
+    .loading-shimmer {
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        rgba(255, 255, 255, 0.1) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      height: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #d1e0ef;
+    }
+    
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    
+    .pagination-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(252, 253, 252, 0.2);
+      border-radius: 4px;
+      background: rgba(10, 30, 50, 0.5);
+      color: var(--color-light);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .pagination-btn:hover {
+      background: rgba(242, 185, 40, 0.2);
+    }
+    
+    .pagination-btn.active {
+      background: var(--color-primary);
+      color: var(--color-secondary);
+      border-color: var(--color-primary);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: rgba(20, 50, 85, 0.9);
+      color: #d1e0ef;
+      font-weight: 500;
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem;
+      border-radius: 8px;
+      background: var(--color-secondary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.error {
+      border-left: 4px solid var(--color-danger);
+    }
+    
+    .notification.success {
+      border-left: 4px solid var(--color-success);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .dashboard {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        padding: 1rem;
+      }
+      
+      .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      
+      .sidebar-menu li {
+        margin-bottom: 0;
+      }
+      
+      .sidebar-menu a {
+        padding: 0.5rem 0.8rem;
+      }
+      
+      .alert-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .alert-actions {
+        flex-wrap: wrap;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .filter-controls {
+        flex-direction: column;
+      }
+      
+      .filter-select {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://via.placeholder.com/50x50/f2b928/143255?text=C" alt="Canary Logo">
+      <h1>Canary Inc.</h1>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">JD</div>
+      <div>
+        <p>John Doe</p>
+        <small>john.doe@example.com</small>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Dashboard Menu</h3>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html"><i class="fas fa-home"></i> Overview</a></li>
+        <li><a href="aliases.html"><i class="fas fa-envelope"></i> Aliases</a></li>
+        <li><a href="protection.html"><i class="fas fa-shield-alt"></i> Protection</a></li>
+        <li><a href="#" class="active"><i class="fas fa-bell"></i> Alerts</a></li>
+        <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="dashboard-header">
+        <h2>Security Alerts</h2>
+        <div class="alert-controls">
+          <button class="btn btn-primary" id="markAllRead">
+            <i class="fas fa-check-double"></i> Mark All as Read
+          </button>
+          <button class="btn btn-danger" id="clearAllAlerts">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+      </div>
+      
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card loading" id="totalAlertsStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+        <div class="stat-card loading" id="criticalAlertsStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+        <div class="stat-card loading" id="unreadAlertsStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+        <div class="stat-card loading" id="resolvedAlertsStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+      </div>
+      
+      <!-- Filter Controls -->
+      <div class="filter-controls">
+        <select class="filter-select" id="severityFilter">
+          <option value="all">All Severities</option>
+          <option value="critical">Critical</option>
+          <option value="warning">Warning</option>
+          <option value="info">Information</option>
+        </select>
+        
+        <select class="filter-select" id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="unread">Unread</option>
+          <option value="read">Read</option>
+          <option value="resolved">Resolved</option>
+        </select>
+        
+        <select class="filter-select" id="typeFilter">
+          <option value="all">All Types</option>
+          <option value="breach">Data Breach</option>
+          <option value="suspicious">Suspicious Activity</option>
+          <option value="system">System Alert</option>
+        </select>
+      </div>
+      
+      <!-- Alerts Container -->
+      <div class="alerts-container">
+        <div class="alerts-header">
+          <h3>Recent Alerts</h3>
+          <span id="alertsCount">Loading...</span>
+        </div>
+        
+        <div id="alertsLoading">
+          <div class="alert-item" style="border-left: none; background: transparent;">
+            <div class="loading-shimmer" style="height: 1.5rem; margin-bottom: 0.8rem;"></div>
+            <div class="loading-shimmer" style="height: 3rem; margin-bottom: 0.8rem;"></div>
+            <div class="loading-shimmer" style="height: 2rem; width: 50%;"></div>
+          </div>
+          <div class="alert-item" style="border-left: none; background: transparent;">
+            <div class="loading-shimmer" style="height: 1.5rem; margin-bottom: 0.8rem;"></div>
+            <div class="loading-shimmer" style="height: 3rem; margin-bottom: 0.8rem;"></div>
+            <div class="loading-shimmer" style="height: 2rem; width: 50%;"></div>
+          </div>
+        </div>
+        
+        <div id="alertsList">
+          <!-- Alerts will be populated by JavaScript -->
+        </div>
+        
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <i class="fas fa-bell-slash"></i>
+          <h3>No alerts found</h3>
+          <p>You're all caught up! No security alerts at this time.</p>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+          <!-- Pagination will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p>⚡Canary — Stay ahead of the leaks.</p>
+  </footer>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    <i class="fas fa-info-circle"></i>
+    <span id="notificationText"></span>
+  </div>
+
+  <script>
+    // API endpoints (using JSONPlaceholder for demonstration)
+    const API_BASE = 'https://jsonplaceholder.typicode.com';
+    const ALERTS_ENDPOINT = '/posts'; // Simulating alerts endpoint
+    
+    // State management
+    let appState = {
+      alerts: [],
+      filteredAlerts: [],
+      currentPage: 1,
+      itemsPerPage: 5,
+      totalItems: 0,
+      severityFilter: 'all',
+      statusFilter: 'all',
+      typeFilter: 'all',
+      isLoading: true
+    };
+    
+    // DOM elements
+    const elements = {
+      totalAlertsStat: document.getElementById('totalAlertsStat'),
+      criticalAlertsStat: document.getElementById('criticalAlertsStat'),
+      unreadAlertsStat: document.getElementById('unreadAlertsStat'),
+      resolvedAlertsStat: document.getElementById('resolvedAlertsStat'),
+      alertsList: document.getElementById('alertsList'),
+      alertsLoading: document.getElementById('alertsLoading'),
+      emptyState: document.getElementById('emptyState'),
+      pagination: document.getElementById('pagination'),
+      alertsCount: document.getElementById('alertsCount'),
+      severityFilter: document.getElementById('severityFilter'),
+      statusFilter: document.getElementById('statusFilter'),
+      typeFilter: document.getElementById('typeFilter'),
+      markAllRead: document.getElementById('markAllRead'),
+      clearAllAlerts: document.getElementById('clearAllAlerts'),
+      notification: document.getElementById('notification'),
+      notificationText: document.getElementById('notificationText')
+    };
+    
+    // Show notification
+    function showNotification(message, type = 'info') {
+      elements.notificationText.textContent = message;
+      elements.notification.className = `notification ${type} show`;
+      
+      setTimeout(() => {
+        elements.notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Fetch alerts from API
+    async function fetchAlerts() {
+      try {
+        appState.isLoading = true;
+        showLoadingState();
+        
+        // In a real app, this would be an actual API endpoint for alerts
+        const response = await fetch(`${API_BASE}${ALERTS_ENDPOINT}?_limit=20`);
+        const alertsData = await response.json();
+        
+        // Simulate our alerts structure from the server
+        const serverAlerts = alertsData.map((item, index) => {
+          // Generate random alert types
+          const alertTypes = ['breach', 'suspicious', 'system'];
+          const alertType = alertTypes[Math.floor(Math.random() * alertTypes.length)];
+          
+          // Generate random severity with weighted probability
+          const severityRand = Math.random();
+          let severity;
+          if (severityRand < 0.2) severity = 'critical';
+          else if (severityRand < 0.5) severity = 'warning';
+          else severity = 'info';
+          
+          // Generate random status
+          const statusRand = Math.random();
+          let status;
+          if (statusRand < 0.4) status = 'unread';
+          else if (statusRand < 0.8) status = 'read';
+          else status = 'resolved';
+          
+          // Generate random creation date (within last 30 days)
+          const createdDate = new Date();
+          createdDate.setDate(createdDate.getDate() - Math.floor(Math.random() * 30));
+          
+          // Create alert title based on type
+          let title;
+          if (alertType === 'breach') {
+            title = `Data Breach Detected: ${item.title.split(' ').slice(0, 2).join(' ')}`;
+          } else if (alertType === 'suspicious') {
+            title = `Suspicious Activity: ${item.title.split(' ').slice(0, 3).join(' ')}`;
+          } else {
+            title = `System Alert: ${item.title.split(' ').slice(0, 2).join(' ')}`;
+          }
+          
+          return {
+            id: item.id,
+            title: title,
+            content: item.body,
+            type: alertType,
+            severity: severity,
+            status: status,
+            date: createdDate.toISOString(),
+            alias: `alias${item.id}@canary.com`,
+            service: item.title.split(' ').slice(0, 3).join(' ')
+          };
+        });
+        
+        // Update app state
+        appState.alerts = serverAlerts;
+        appState.totalItems = serverAlerts.length;
+        appState.isLoading = false;
+        
+        // Update UI
+        applyFilters();
+        updateStats();
+        
+        showNotification('Alerts loaded successfully', 'success');
+        
+      } catch (error) {
+        console.error('Error fetching alerts:', error);
+        showNotification('Failed to load alerts. Using demo data.', 'error');
+        
+        // Fallback to demo data
+        loadDemoAlerts();
+      }
+    }
+    
+    // Load demo alerts if API fails
+    function loadDemoAlerts() {
+      appState.alerts = [
+        {
+          id: 1,
+          title: 'Data Breach Detected: Shopping Service',
+          content: 'Your alias shopping.j8d3k9@canary.com was found in a data breach from "ShopMax" on August 12, 2023. We recommend disabling this alias immediately.',
+          type: 'breach',
+          severity: 'critical',
+          status: 'unread',
+          date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+          alias: 'shopping.j8d3k9@canary.com',
+          service: 'Online Shopping Service'
+        },
+        {
+          id: 2,
+          title: 'Suspicious Login Attempt',
+          content: 'A login attempt was detected from a new device in London, UK. If this was not you, please secure your account.',
+          type: 'suspicious',
+          severity: 'warning',
+          status: 'read',
+          date: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+          alias: 'N/A',
+          service: 'Account Security'
+        },
+        {
+          id: 3,
+          title: 'System Maintenance Notice',
+          content: 'Scheduled maintenance will occur on Saturday from 2:00 AM to 4:00 AM EST. Some services may be temporarily unavailable.',
+          type: 'system',
+          severity: 'info',
+          status: 'read',
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+          alias: 'N/A',
+          service: 'Canary System'
+        },
+        {
+          id: 4,
+          title: 'Data Breach Detected: News Service',
+          content: 'Your alias news.j8d3k9@canary.com was found in a data breach from "NewsMax" on July 28, 2023. This alias has been automatically disabled.',
+          type: 'breach',
+          severity: 'critical',
+          status: 'resolved',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+          alias: 'news.j8d3k9@canary.com',
+          service: 'News Subscription'
+        },
+        {
+          id: 5,
+          title: 'New Security Feature Available',
+          content: 'Two-factor authentication is now available for your account. Enhance your security by enabling it in your account settings.',
+          type: 'system',
+          severity: 'info',
+          status: 'unread',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
+          alias: 'N/A',
+          service: 'Canary Security'
+        }
+      ];
+      
+      appState.totalItems = appState.alerts.length;
+      appState.isLoading = false;
+      
+      applyFilters();
+      updateStats();
+    }
+    
+    // Show loading state
+    function showLoadingState() {
+      elements.totalAlertsStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.totalAlertsStat.classList.add('loading');
+      
+      elements.criticalAlertsStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.criticalAlertsStat.classList.add('loading');
+      
+      elements.unreadAlertsStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.unreadAlertsStat.classList.add('loading');
+      
+      elements.resolvedAlertsStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.resolvedAlertsStat.classList.add('loading');
+    }
+    
+    // Apply filters
+    function applyFilters() {
+      let filtered = [...appState.alerts];
+      
+      // Apply severity filter
+      if (appState.severityFilter !== 'all') {
+        filtered = filtered.filter(alert => alert.severity === appState.severityFilter);
+      }
+      
+      // Apply status filter
+      if (appState.statusFilter !== 'all') {
+        filtered = filtered.filter(alert => alert.status === appState.statusFilter);
+      }
+      
+      // Apply type filter
+      if (appState.typeFilter !== 'all') {
+        filtered = filtered.filter(alert => alert.type === appState.typeFilter);
+      }
+      
+      // Sort by date (newest first)
+      filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      appState.filteredAlerts = filtered;
+      appState.totalItems = filtered.length;
+      appState.currentPage = 1;
+      
+      renderAlerts();
+      renderPagination();
+      updateAlertsCount();
+    }
+    
+    // Update alerts count text
+    function updateAlertsCount() {
+      const total = appState.filteredAlerts.length;
+      const unread = appState.filteredAlerts.filter(a => a.status === 'unread').length;
+      
+      elements.alertsCount.textContent = `${total} alert${total !== 1 ? 's' : ''} (${unread} unread)`;
+    }
+    
+    // Render alerts to the list
+    function renderAlerts() {
+      elements.alertsLoading.style.display = 'none';
+      
+      if (appState.filteredAlerts.length === 0) {
+        elements.alertsList.innerHTML = '';
+        elements.emptyState.style.display = 'block';
+        return;
+      }
+      
+      elements.emptyState.style.display = 'none';
+      
+      // Calculate pagination
+      const startIndex = (appState.currentPage - 1) * appState.itemsPerPage;
+      const endIndex = Math.min(startIndex + appState.itemsPerPage, appState.filteredAlerts.length);
+      const currentAlerts = appState.filteredAlerts.slice(startIndex, endIndex);
+      
+      // Clear existing alerts
+      elements.alertsList.innerHTML = '';
+      
+      // Add new alerts
+      currentAlerts.forEach(alert => {
+        const alertElement = document.createElement('div');
+        alertElement.className = `alert-item ${alert.severity}`;
+        
+        // Format date
+        const alertDate = new Date(alert.date);
+        const formattedDate = alertDate.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+        const formattedTime = alertDate.toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        
+        // Set icon based on severity
+        let icon;
+        if (alert.severity === 'critical') icon = 'fa-exclamation-circle';
+        else if (alert.severity === 'warning') icon = 'fa-exclamation-triangle';
+        else icon = 'fa-info-circle';
+        
+        alertElement.innerHTML = `
+          <div class="alert-header">
+            <div class="alert-title">
+              <i class="fas ${icon} alert-icon"></i>
+              <span>${alert.title}</span>
+            </div>
+            <div class="alert-date">${formattedDate} at ${formattedTime}</div>
+          </div>
+          <div class="alert-content">
+            <p>${alert.content}</p>
+            ${alert.alias !== 'N/A' ? `<p><strong>Affected Alias:</strong> ${alert.alias}</p>` : ''}
+            ${alert.service ? `<p><strong>Service:</strong> ${alert.service}</p>` : ''}
+          </div>
+          <div class="alert-actions">
+            ${alert.status !== 'resolved' ? `
+              <button class="alert-btn alert-btn-primary" data-action="resolve" data-id="${alert.id}">
+                <i class="fas fa-check"></i> Mark as Resolved
+              </button>
+            ` : ''}
+            ${alert.status === 'unread' ? `
+              <button class="alert-btn alert-btn-secondary" data-action="read" data-id="${alert.id}">
+                <i class="fas fa-eye"></i> Mark as Read
+              </button>
+            ` : ''}
+            <button class="alert-btn alert-btn-secondary" data-action="view" data-id="${alert.id}">
+              <i class="fas fa-search"></i> View Details
+            </button>
+          </div>
+        `;
+        
+        elements.alertsList.appendChild(alertElement);
+      });
+      
+      // Add event listeners to buttons
+      document.querySelectorAll('.alert-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const action = this.getAttribute('data-action');
+          const id = parseInt(this.getAttribute('data-id'));
+          handleAlertAction(action, id);
+        });
+      });
+    }
+    
+    // Handle alert actions
+    function handleAlertAction(action, id) {
+      const alert = appState.alerts.find(a => a.id === id);
+      
+      if (!alert) return;
+      
+      if (action === 'resolve') {
+        alert.status = 'resolved';
+        showNotification('Alert marked as resolved', 'success');
+      } else if (action === 'read') {
+        alert.status = 'read';
+        showNotification('Alert marked as read', 'success');
+      } else if (action === 'view') {
+        showNotification(`Viewing details for: ${alert.title}`, 'info');
+        // In a real app, this would open a detailed view
+        }
+      
+      applyFilters();
+      updateStats();
+    }
+    
+    // Mark all alerts as read
+    function markAllAsRead() {
+      appState.alerts.forEach(alert => {
+        if (alert.status === 'unread') {
+          alert.status = 'read';
+        }
+      });
+      
+      applyFilters();
+      updateStats();
+      showNotification('All alerts marked as read', 'success');
+    }
+    
+    // Clear all alerts
+    function clearAllAlerts() {
+      if (confirm('Are you sure you want to clear all alerts? This action cannot be undone.')) {
+        appState.alerts = appState.alerts.filter(alert => alert.severity === 'critical');
+        applyFilters();
+        updateStats();
+        showNotification('All non-critical alerts cleared', 'success');
+      }
+    }
+    
+    // Render pagination controls
+    function renderPagination() {
+      const totalPages = Math.ceil(appState.totalItems / appState.itemsPerPage);
+      
+      if (totalPages <= 1) {
+        elements.pagination.innerHTML = '';
+        return;
+      }
+      
+      let paginationHTML = '';
+      
+      // Previous button
+      paginationHTML += `
+        <button class="pagination-btn" ${appState.currentPage === 1 ? 'disabled' : ''} 
+                onclick="changePage(${appState.currentPage - 1})">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      `;
+      
+      // Page numbers
+      const maxVisiblePages = 5;
+      let startPage = Math.max(1, appState.currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+          <button class="pagination-btn ${i === appState.currentPage ? 'active' : ''}" 
+                  onclick="changePage(${i})">${i}</button>
+        `;
+      }
+      
+      // Next button
+      paginationHTML += `
+        <button class="pagination-btn" ${appState.currentPage === totalPages ? 'disabled' : ''} 
+                onclick="changePage(${appState.currentPage + 1})">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      `;
+      
+      elements.pagination.innerHTML = paginationHTML;
+    }
+    
+    // Change page
+    function changePage(page) {
+      appState.currentPage = page;
+      renderAlerts();
+      renderPagination();
+    }
+    
+    // Update stats cards
+    function updateStats() {
+      if (!appState.alerts.length) return;
+      
+      const totalAlerts = appState.alerts.length;
+      const criticalAlerts = appState.alerts.filter(a => a.severity === 'critical').length;
+      const unreadAlerts = appState.alerts.filter(a => a.status === 'unread').length;
+      const resolvedAlerts = appState.alerts.filter(a => a.status === 'resolved').length;
+      
+      elements.totalAlertsStat.classList.remove('loading');
+      elements.totalAlertsStat.innerHTML = `
+        <i class="fas fa-bell"></i>
+        <h3>${totalAlerts}</h3>
+        <p>Total Alerts</p>
+      `;
+      
+      elements.criticalAlertsStat.classList.remove('loading');
+      elements.criticalAlertsStat.innerHTML = `
+        <i class="fas fa-exclamation-circle"></i>
+        <h3>${criticalAlerts}</h3>
+        <p>Critical Alerts</p>
+      `;
+      
+      elements.unreadAlertsStat.classList.remove('loading');
+      elements.unreadAlertsStat.innerHTML = `
+        <i class="fas fa-envelope"></i>
+        <h3>${unreadAlerts}</h3>
+        <p>Unread Alerts</p>
+      `;
+      
+      elements.resolvedAlertsStat.classList.remove('loading');
+      elements.resolvedAlertsStat.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <h3>${resolvedAlerts}</h3>
+        <p>Resolved Alerts</p>
+      `;
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up event listeners for filters
+      elements.severityFilter.addEventListener('change', function() {
+        appState.severityFilter = this.value;
+        applyFilters();
+      });
+      
+      elements.statusFilter.addEventListener('change', function() {
+        appState.statusFilter = this.value;
+        applyFilters();
+      });
+      
+      elements.typeFilter.addEventListener('change', function() {
+        appState.typeFilter = this.value;
+        applyFilters();
+      });
+      
+      // Set up event listeners for buttons
+      elements.markAllRead.addEventListener('click', markAllAsRead);
+      elements.clearAllAlerts.addEventListener('click', clearAllAlerts);
+      
+      // Load initial data
+      fetchAlerts();
+    });
+  </script>
+</body>
+</html>

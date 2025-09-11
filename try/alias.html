@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Aliases - Canary</title>
+  <link rel="stylesheet" href="alias.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="logo3.jpg" alt="Logo">
+      <h1>Canary</h1>
+    </div>
+    <div class="user-info">
+      <span>john.doe@example.com</span>
+      <div class="user-avatar">A</div>
+    </div>
+  </header>
+
+  <!-- Dashboard Layout -->
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3 class="menu-title">Dashboard Menu</h3>
+      <ul class="sidebar-menu">
+        <li><a href="#"><i class="fas fa-home"></i> Overview</a></li>
+        <li><a href="#" class="active"><i class="fas fa-at"></i> Aliases</a></li>
+        <li><a href="#"><i class="fas fa-shield-alt"></i> Protection</a></li>
+        <li><a href="#"><i class="fas fa-bell"></i> Alerts</a></li>
+        <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
+        <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-header">
+        <h2>Email Aliases</h2>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create New Alias</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-envelope"></i>
+          <h3>30</h3>
+          <p>Total Aliases</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-check-circle"></i>
+          <h3>22</h3>
+          <p>Active Aliases</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-shield-alt"></i>
+          <h3>14</h3>
+          <p>Leak-Protected</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-ban"></i>
+          <h3>8</h3>
+          <p>Disabled Aliases</p>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <input type="text" placeholder="Search aliases...">
+        <select>
+          <option>All Statuses</option>
+          <option>Active</option>
+          <option>Leaked</option>
+          <option>Disabled</option>
+        </select>
+        <select>
+          <option>Newest First</option>
+          <option>Oldest First</option>
+        </select>
+      </div>
+
+      <!-- Aliases Table -->
+      <div class="aliases-container">
+        <table class="aliases-table">
+          <thead>
+            <tr>
+              <th>Alias Email</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>alias5@canary.com<br><small>repudiandae veniam quaerat sunt sed</small></td>
+              <td>nesciunt quas odio</td>
+              <td><span class="status leaked">Leaked</span></td>
+              <td>Jul 29, 2025</td>
+              <td class="actions">
+                <i class="fas fa-edit"></i>
+                <i class="fas fa-pause"></i>
+                <i class="fas fa-trash"></i>
+              </td>
+            </tr>
+            <tr>
+              <td>alias17@canary.com<br><small>eos voluptas et aut odit natus earum</small></td>
+              <td>fugit voluptas sed</td>
+              <td><span class="status active">Active</span></td>
+              <td>Jul 26, 2025</td>
+              <td class="actions">
+                <i class="fas fa-edit"></i>
+                <i class="fas fa-pause"></i>
+                <i class="fas fa-trash"></i>
+              </td>
+            </tr>
+            <tr>
+              <td>alias15@canary.com<br><small>reprehenderit quos placeat</small></td>
+              <td>eveniet quod temporibus</td>
+              <td><span class="status active">Active</span></td>
+              <td>Jul 25, 2025</td>
+              <td class="actions">
+                <i class="fas fa-edit"></i>
+                <i class="fas fa-pause"></i>
+                <i class="fas fa-trash"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Canary — Keeping your identity safe, one alias at a time.</p>
+  </footer>
+  <script src="alias.js"></script>
+</body>
+</html>

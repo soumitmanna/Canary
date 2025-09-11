@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canary - Protection Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --color-bg: #f9f9e9;       /* Creamy background */
+  --color-primary: #6e1f1f;  /* Dark maroon */
+  --color-secondary: #7a3c3c;/* Softer maroon */
+  --color-light: #fff;
+  --color-dark: #333;
+  --color-accent: #d86f3d;   /* Burnt orange accent */
+  --color-success: #2ecc71;
+  --color-danger: #e74c3c;
+  --color-warning: #f39c12;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Styles */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background-color: #fffaf2;
+  border-bottom: 2px solid var(--color-primary);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+  width: 50px;
+  margin-right: 15px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.logo h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Dashboard Layout */
+.dashboard {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fffdf7;
+  padding: 2rem 1rem;
+  border-right: 2px solid var(--color-primary);
+}
+
+.sidebar h3 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.sidebar-menu {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.sidebar-menu li {
+  margin-bottom: 1rem;
+}
+
+.sidebar-menu a {
+  color: var(--color-dark);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.sidebar-menu a:hover {
+  background-color: #fceee8;
+  color: var(--color-primary);
+}
+
+.sidebar-menu a.active {
+  background-color: #f8dcd0;
+  color: var(--color-primary);
+}
+
+.sidebar-menu i {
+  width: 20px;
+  text-align: center;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #fffdf7;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-card i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+}
+
+.stat-card h3 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+.stat-card p {
+  color: var(--color-dark);
+}
+
+/* Content Cards */
+.content-card {
+  background: #fffdf7;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content-card h3 {
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ddd;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--color-primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(30px);
+}
+
+/* Settings List */
+.settings-list {
+  list-style: none;
+}
+
+.settings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid #f0e6e6;
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.settings-info {
+  flex: 1;
+}
+
+.settings-info h4 {
+  margin-bottom: 0.3rem;
+  color: var(--color-primary);
+}
+
+.settings-info p {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Threat Level Indicator */
+.threat-level {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.threat-low {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: var(--color-success);
+}
+
+.threat-medium {
+  background-color: rgba(243, 156, 18, 0.15);
+  color: var(--color-warning);
+}
+
+.threat-high {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: var(--color-danger);
+}
+
+/* Recent Activity */
+.activity-list {
+  list-style: none;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0e6e6;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.icon-safe {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: var(--color-success);
+}
+
+.icon-warning {
+  background-color: rgba(243, 156, 18, 0.15);
+  color: var(--color-warning);
+}
+
+.icon-danger {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: var(--color-danger);
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-content h4 {
+  margin-bottom: 0.3rem;
+  color: var(--color-primary);
+}
+
+.activity-content p {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.activity-time {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #fffaf2;
+  color: var(--color-primary);
+  font-weight: 500;
+  border-top: 2px solid var(--color-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+    border-right: none;
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .sidebar-menu li {
+    margin-bottom: 0;
+  }
+
+  .sidebar-menu a {
+    padding: 0.5rem 0.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="logo3.jpg" alt="Canary Logo">
+      <h1>Canary Inc.</h1>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">JD</div>
+      <div>
+        <p>John Doe</p>
+        <small>john.doe@example.com</small>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Dashboard Menu</h3>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html"><i class="fas fa-home"></i> Overview</a></li>
+        <li><a href="aliases.html"><i class="fas fa-envelope"></i> Aliases</a></li>
+        <li><a href="#" class="active"><i class="fas fa-shield-alt"></i> Protection</a></li>
+        <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+        <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="dashboard-header">
+        <h2>Protection Dashboard</h2>
+        <p>Monitor your security status and manage protection settings</p>
+      </div>
+      
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fas fa-shield-alt"></i>
+          <h3>97%</h3>
+          <p>Protection Score</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-eye"></i>
+          <h3>24</h3>
+          <p>Monitored Accounts</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-ban"></i>
+          <h3>142</h3>
+          <p>Threats Blocked</p>
+        </div>
+        <div class="stat-card">
+          <i class="fas fa-clock"></i>
+          <h3>2 hrs</h3>
+          <p>Last Scan</p>
+        </div>
+      </div>
+      
+      <!-- Protection Status -->
+      <div class="content-card">
+        <h3>Protection Status</h3>
+        <div class="threat-level threat-low">
+          <i class="fas fa-check-circle"></i>
+          <span>All systems secure - No active threats detected</span>
+        </div>
+      </div>
+      
+      <!-- Automatic Protection -->
+      <div class="content-card">
+        <h3>Automatic Protection</h3>
+        <ul class="settings-list">
+          <li class="settings-item">
+            <div class="settings-info">
+              <h4>Real-time Monitoring</h4>
+              <p>Continuously monitor for data breaches and leaks</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="settings-item">
+            <div class="settings-info">
+              <h4>Auto-generate Aliases</h4>
+              <p>Create aliases automatically for new sign-ups</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="settings-item">
+            <div class="settings-info">
+              <h4>Auto-disable Compromised Aliases</h4>
+              <p>Automatically disable aliases found in breaches</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Alert Preferences -->
+      <div class="content-card">
+        <h3>Alert Preferences</h3>
+        <ul class="settings-list">
+          <li class="settings-item">
+            <div class="settings-info">
+              <h4>Email Notifications</h4>
+              <p>Receive breach alerts via email</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="settings-item">
+            <div class="settings-info">
+              <h4>Push Notifications</h4>
+              <p>Receive instant alerts on your devices</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </li>
+          <li class="settings-item">
+            <div class="settings-info">
+              <h4>SMS Alerts</h4>
+              <p>Get critical alerts via text message</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Recent Activity -->
+      <div class="content-card">
+        <h3>Recent Protection Activity</h3>
+        <ul class="activity-list">
+          <li class="activity-item">
+            <div class="activity-icon icon-safe">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="activity-content">
+              <h4>Alias Protected</h4>
+              <p>amzn.j8d3k9@canary.com secured for Amazon login</p>
+            </div>
+            <div class="activity-time">10 min ago</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon icon-warning">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="activity-content">
+              <h4>Suspicious Activity</h4>
+              <p>Unusual login attempt detected from new device</p>
+            </div>
+            <div class="activity-time">45 min ago</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon icon-safe">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+            <div class="activity-content">
+              <h4>Regular Scan Completed</h4>
+              <p>All aliases scanned for breaches - no issues found</p>
+            </div>
+            <div class="activity-time">2 hrs ago</div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon icon-danger">
+              <i class="fas fa-radiation"></i>
+            </div>
+            <div class="activity-content">
+              <h4>Data Breach Detected</h4>
+              <p>news.j8d3k9@canary.com found in "NewsMax" breach</p>
+            </div>
+            <div class="activity-time">1 day ago</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p>⚡Canary — Stay ahead of the leaks.</p>
+  </footer>
+
+  <script>
+    // Sample data for the protection dashboard
+    const protectionData = {
+      score: 97,
+      monitoredAccounts: 24,
+      threatsBlocked: 142,
+      lastScan: '2 hours ago',
+      status: 'secure',
+      settings: {
+        realTimeMonitoring: true,
+        autoGenerateAliases: true,
+        autoDisableAliases: false,
+        emailNotifications: true,
+        pushNotifications: true,
+        smsAlerts: false
+      },
+      recentActivity: [
+        {
+          type: 'safe',
+          icon: 'shield-alt',
+          title: 'Alias Protected',
+          description: 'amzn.j8d3k9@canary.com secured for Amazon login',
+          time: '10 min ago'
+        },
+        {
+          type: 'warning',
+          icon: 'exclamation-triangle',
+          title: 'Suspicious Activity',
+          description: 'Unusual login attempt detected from new device',
+          time: '45 min ago'
+        },
+        {
+          type: 'safe',
+          icon: 'sync-alt',
+          title: 'Regular Scan Completed',
+          description: 'All aliases scanned for breaches - no issues found',
+          time: '2 hrs ago'
+        },
+        {
+          type: 'danger',
+          icon: 'radiation',
+          title: 'Data Breach Detected',
+          description: 'news.j8d3k9@canary.com found in "NewsMax" breach',
+          time: '1 day ago'
+        }
+      ]
+    };
+
+    // Initialize the page with data
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up toggle switches with actual data
+      document.getElementById('realTimeMonitoring').checked = protectionData.settings.realTimeMonitoring;
+      document.getElementById('autoGenerateAliases').checked = protectionData.settings.autoGenerateAliases;
+      document.getElementById('autoDisableAliases').checked = protectionData.settings.autoDisableAliases;
+      document.getElementById('emailNotifications').checked = protectionData.settings.emailNotifications;
+      document.getElementById('pushNotifications').checked = protectionData.settings.pushNotifications;
+      document.getElementById('smsAlerts').checked = protectionData.settings.smsAlerts;
+      
+      // Add event listeners for toggle switches
+      document.querySelectorAll('.toggle-switch input').forEach(input => {
+        input.addEventListener('change', function() {
+          const settingId = this.id;
+          console.log(`Setting ${settingId} changed to: ${this.checked}`);
+          // In a real app, you would send this change to the server
+        });
+      });
+      
+      // Simulate live updates every 30 seconds
+      setInterval(() => {
+        // Random small changes to make it feel alive
+        const threatsBlockedElement = document.querySelector('.stat-card:nth-child(3) h3');
+        const currentThreats = parseInt(threatsBlockedElement.textContent);
+        
+        if (Math.random() > 0.7) {
+          threatsBlockedElement.textContent = currentThreats + 1;
+          
+          // Add a new activity item
+          const activityList = document.querySelector('.activity-list');
+          const newActivity = document.createElement('li');
+          newActivity.className = 'activity-item';
+          newActivity.innerHTML = `
+            <div class="activity-icon icon-safe">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="activity-content">
+              <h4>Threat Blocked</h4>
+              <p>New phishing attempt blocked</p>
+            </div>
+            <div class="activity-time">Just now</div>
+          `;
+          
+          // Add at the beginning of the list
+          activityList.insertBefore(newActivity, activityList.firstChild);
+          
+          // Remove the last item if there are more than 4
+          if (activityList.children.length > 4) {
+            activityList.removeChild(activityList.lastChild);
+          }
+        }
+      }, 30000);
+    });
+  </script>
+</body>
+</html>

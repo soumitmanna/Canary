@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Canary - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="image">
+    <img src="logo3.png" alt="oops" height=70 width=70>
+    <h1>Canary Inc.</h1>
+  </div>
+  <div class="main">
+    <h1>Welcome to Canary</h1>
+    <p class="tag"><i>Your shield against data leaks. Create disposable aliases, track breaches, and stay safe online.</i></p>
+    <p class="content">Mitigate the risk of data breaches with Canary's enterprise-grade email aliasing. We replace your personal email with managed, disposable aliases for all online registrations. When a third-party breach occurs, our real-time monitoring instantly notifies you, allowing for the immediate revocation of the compromised alias. This ensures your primary identity remains secure, minimizing your attack surface and protecting your inbox from malicious activity.</p>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <h3>Secure Aliases</h3>
+      <p>Create disposable email addresses with one click</p>
+    </div>
+    <div class="feature">
+      <h3>Instant Alerts</h3>
+      <p>Get notified immediately when a breach is detected</p>
+    </div>
+    <div class="feature">
+      <h3>Total Control</h3>
+      <p>Enable or disable aliases anytime with a single click</p>
+    </div>
+  </div>
+
+  <div class="sign">
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn">Register</button>
+  </div>
+  
+  <footer>
+    <div></div>
+    <i>⚡Canary — Catch the leak before it catches you.</i>
+  </footer>
+
+  
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-container">
+      <button class="close-btn" id="closeLogin">&times;</button>
+      
+      <div class="modal-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to your Canary account</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="your.email@example.com" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        </div>
+        
+        <button type="submit" class="modal-button">Login</button>
+        
+        <div class="modal-footer">
+          <p>Don't have an account? <a id="switchToRegister">Register</a></p>
+          <p><a href="#">Forgot your password?</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal-overlay" id="registerModal">
+    <div class="modal-container">
+      <button class="close-btn" id="closeRegister">&times;</button>
+      
+      <div class="modal-header">
+        <h2>Create Account</h2>
+        <p>Join Canary to protect your digital identity</p>
+      </div>
+      
+      <form id="registerForm">
+        <div class="input-group">
+          <label for="registerName">Name</label>
+          <input type="text" id="registerName" placeholder="Full Name" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="registerEmail">Email Address</label>
+          <input type="email" id="registerEmail" placeholder="your.email@example.com" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="registerPassword">Password</label>
+          <input type="password" id="registerPassword" placeholder="Create a strong password" required>
+        </div>
+        
+        <div class="input-group">
+          <label for="registerConfirm">Confirm Password</label>
+          <input type="password" id="registerConfirm" placeholder="Confirm your password" required>
+        </div>
+        
+        <button type="submit" class="modal-button">Create Account</button>
+        
+        <div class="modal-footer">
+          <p>Already have an account? <a id="switchToLogin">Login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get modal elements
+      const loginModal = document.getElementById('loginModal');
+      const registerModal = document.getElementById('registerModal');
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const closeLogin = document.getElementById('closeLogin');
+      const closeRegister = document.getElementById('closeRegister');
+      const switchToRegister = document.getElementById('switchToRegister');
+      const switchToLogin = document.getElementById('switchToLogin');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      
+      // Show login modal
+      loginBtn.addEventListener('click', function() {
+        loginModal.classList.add('active');
+      });
+      
+      // Show register modal
+      registerBtn.addEventListener('click', function() {
+        registerModal.classList.add('active');
+      });
+      
+      // Close modals
+      closeLogin.addEventListener('click', function() {
+        loginModal.classList.remove('active');
+      });
+      
+      closeRegister.addEventListener('click', function() {
+        registerModal.classList.remove('active');
+      });
+      
+      // Switch between modals
+      switchToRegister.addEventListener('click', function() {
+        loginModal.classList.remove('active');
+        registerModal.classList.add('active');
+      });
+      
+      switchToLogin.addEventListener('click', function() {
+        registerModal.classList.remove('active');
+        loginModal.classList.add('active');
+      });
+      
+      // Close modals when clicking outside
+      window.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+          loginModal.classList.remove('active');
+        }
+        if (e.target === registerModal) {
+          registerModal.classList.remove('active');
+        }
+      });
+      
+      // Form submission handlers
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        // In a real application, you would send this data to your server
+        console.log('Login attempt with:', { email, password });
+        
+        // Simulate successful login
+        alert('Login successful! Redirecting to dashboard...');
+        loginModal.classList.remove('active');
+      });
+      
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirm = document.getElementById('registerConfirm').value;
+        
+        // Simple validation
+        if (password !== confirm) {
+          alert('Passwords do not match!');
+          return;
+        }
+        
+        // In a real application, you would send this data to your server
+        console.log('Registration attempt with:', { name, email, password });
+        
+        // Simulate successful registration
+        alert('Registration successful! You can now login.');
+        registerModal.classList.remove('active');
+        loginModal.classList.add('active');
+      });
+      
+      // Add escape key to close modals
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          loginModal.classList.remove('active');
+          registerModal.classList.remove('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

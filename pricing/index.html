@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canary Pricing Plans</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fdf8f3; /* light background */
+      margin: 0;
+      padding: 0;
+      color: #3c1f1a;
+    }
+
+    /* Header Section */
+    header {
+      background: linear-gradient(135deg, #5a2e2a, #8b4b3e); /* brownish gradient */
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    header .logo-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    header img {
+      height: 55px;
+      background: #fff;
+      padding: 6px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      font-size: 16px;
+      color: #f5e9e9;
+    }
+
+    /* Pricing Container */
+    .pricing-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 40px 20px;
+    }
+
+    .pricing-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .pricing-card h2 {
+      background: linear-gradient(135deg, #5a2e2a, #8b4b3e);
+      color: white;
+      padding: 10px;
+      border-radius: 10px 10px 0 0;
+      margin: -25px -25px 20px -25px;
+    }
+
+    .price {
+      font-size: 26px;
+      color: #5a2e2a;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+      text-align: left;
+    }
+
+    ul li {
+      margin: 10px 0;
+      font-size: 15px;
+    }
+
+    ul li::before {
+      content: "✔";
+      color: #5a2e2a;
+      margin-right: 8px;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #5a2e2a, #8b4b3e);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #8b4b3e, #5a2e2a);
+    }
+
+    /* Most Popular Tag */
+    .popular-tag {
+      background: #f4b400;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 0 10px 0 10px;
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .pricing-card.popular {
+      position: relative;
+      border: 2px solid #f4b400;
+    }
+
+    /* Footer */
+    footer {
+      background: #3c1f1a;
+      color: #eee;
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    footer .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    footer img {
+      height: 40px;
+      background: #fff;
+      padding: 5px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 14px;
+      color: #f5e9e9;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-title">
+      <!-- 🔽 Replace 'your-logo.png' with your actual logo file path -->
+      <a href="index.html">
+        <img src="canaryimg.jpg" alt="Canary Logo">
+      </a>
+      <div>
+        <h1>Canary Pricing Plans</h1>
+        <p>Your shield against data leaks</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pricing Section -->
+  <section class="pricing-container">
+    <!-- Free Plan -->
+    <div class="pricing-card">
+      <h2>Canary Free</h2>
+      <p class="price">₹0 / year</p>
+      <ul>
+        <li>Secure Aliases</li>
+        <li>Basic Email Protection</li>
+        <li>Limited Alerts</li>
+        <li>Guided Breach Playbook Uses 3 per month</li>
+        <li>Manual Service Risk Lookup</li>
+      </ul>
+      <button class="btn">Get Started</button>
+    </div>
+
+    <!-- Pro Plan -->
+    <div class="pricing-card popular">
+      <span class="popular-tag">Most Popular</span>
+      <h2>Canary Pro</h2>
+      <p class="price">$79/year</p>
+      <ul>
+        <li>Unlimited Aliases</li>
+        <li>Real-time Breach Alerts</li>
+        <li>Priority Support</li>
+        <li>AI-Powered Dynamic Risk Score</li>
+        <li>Unlimited Guided Breach Playbook Uses</li>
+        <li>Custom Domain Support</li>
+        <li>Priority Support</li>
+        <li>Priority Support</li>
+      </ul>
+      <button class="btn">Upgrade</button>
+    </div>
+
+    <!-- Enterprise Plan -->
+    <div class="pricing-card">
+      <h2>Canary Enterprise</h2>
+      <p class="price">Custom Pricing</p>
+      <ul>
+        <li>Organization-wide Protection</li>
+        <li>Admin Dashboard</li>
+        <li>Guided Breach Playbook Uses-Full API Access</li>
+        <li>Personal API Access</li>
+        <li>Partner Integration & Webhooks</li>
+      </ul>
+      <button class="btn">Contact Us</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <!-- 🔽 Replace with your logo -->
+      <p>© 2025 Canary. Protecting your data with trust.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canary - Secure Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="try.css">
+    <script src="try.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="../Greeter/logo3.png" alt="Canary Logo">
+            <h1>Canary Inc.</h1>
+        </div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Features</a>
+            <a href="#">Pricing</a>
+            <a href="#">About</a>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="hero">
+        <div class="hero-content">
+            <h2>Protect Your Digital Identity</h2>
+            <p>Canary generates unique, disposable email aliases for every website you sign up for. If a data breach occurs, only the alias is compromised. You'll be instantly alerted, allowing you to shut down the compromised alias and keep your inbox safe.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure Aliases</h3>
+                    <p>Create disposable email addresses with one click</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bell"></i>
+                    <h3>Instant Alerts</h3>
+                    <p>Get notified immediately when a breach is detected</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-lock"></i>
+                    <h3>Total Control</h3>
+                    <p>Enable or disable aliases anytime with a single click</p>
+                </div>
+            </div>
+            
+            <button class="cta-button" id="showLogin">Sign In to Your Account</button>
+        </div>
+    </main>
+    
+    <!-- Login Overlay -->
+    <div class="overlay" id="loginOverlay">
+        <div class="login-container">
+            <button class="close-btn" id="closeLogin">&times;</button>
+            
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your Canary account</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your.email@example.com" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="login-button">Sign In</button>
+                
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="#">Sign up</a></p>
+                    <p><a href="#">Forgot your password?</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>⚡Canary — Catch the leak before it catches you.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('loginOverlay');
+            const showLoginBtn = document.getElementById('showLogin');
+            const closeLoginBtn = document.getElementById('closeLogin');
+            const loginForm = document.getElementById('loginForm');
+            const body = document.body;
+            
+            // Show login overlay
+            showLoginBtn.addEventListener('click', function() {
+                overlay.classList.add('active');
+                body.classList.add('overlay-active');
+            });
+            
+            // Hide login overlay
+            closeLoginBtn.addEventListener('click', function() {
+                overlay.classList.remove('active');
+                body.classList.remove('overlay-active');
+            });
+            
+            // Hide overlay when clicking outside of login container
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    body.classList.remove('overlay-active');
+                }
+            });
+            
+            // Handle form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Here you would typically send this data to your server
+                console.log('Login attempt with:', { email, password });
+                
+                // Simulate successful login
+                alert('Login successful! Redirecting...');
+                overlay.classList.remove('active');
+                body.classList.remove('overlay-active');
+            });
+            
+            // Add escape key to close overlay
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    overlay.classList.remove('active');
+                    body.classList.remove('overlay-active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

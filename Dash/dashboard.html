@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Project Canary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<script>
+function checkLeak() {
+  const alias = document.getElementById('aliasInput').value.trim();
+  const result = document.getElementById('result');
+
+  if(alias === "") {
+    result.textContent = "Please enter an alias or email to check.";
+    result.style.color = "yellow";
+    return;
+  }
+
+  // Simple simulated check
+  const leakedAliases = ["test@example.com", "john@doe.com"]; // example "leaked" emails
+
+  if(leakedAliases.includes(alias.toLowerCase())) {
+    result.textContent = `⚠️ Warning! ${alias} was found in data leaks.`;
+    result.style.color = "red";
+  } else {
+    result.textContent = `✅ Good news! No leaks found for ${alias}.`;
+    result.style.color = "brown";
+  }
+}
+</script>
+
+<body>
+  <div class="container">
+  <h1>Dashboard</h1>
+  <p>Welcome back! Manage your aliases and stay leak-proof 🔐</p>
+
+  <input type="text" id="aliasInput" placeholder="Enter your alias/email">
+  <button onclick="checkLeak()">Check for leaks</button>
+
+  <p id="result" style="margin-top:15px; font-weight:bold;"></p>
+
+  <button onclick="window.location.href='index.html'">Logout</button>
+</div>
+
+
+  <footer>
+    <p>⚡Canary — Stay ahead of the leaks.</p>
+  </footer>
+</body>
+</html>

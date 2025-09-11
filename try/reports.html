@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canary - Reports</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    :root {
+      --color-primary: #640d14;
+      --color-secondary: #640d14;
+      --color-light: #fcfdfc;
+      --color-accent: #ee6c4d;
+      --color-dark: #0f2842;
+      --color-danger: #e74c3c;
+      --color-success: #2ecc71;
+      --color-warning: #f39c12;
+      --color-info: #640d14;
+      --color-purple: #9b59b6;
+    }
+    
+    body {
+      background: linear-gradient(#f4f9e9);
+      color: var(--color-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background-color:linear-gradient(135 deg #f4f9e9) ;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo img {
+      height: 50px;
+      width: 50px;
+      margin-right: 15px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135 deg, #640d14);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard {
+      display: flex;
+      flex: 1;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color:linear-gradient(135 deg,#f4f9e9);
+      padding: 2rem 1rem;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+      margin-top: 2rem;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 1rem;
+    }
+    
+    .sidebar-menu a {
+      color: linear-gradient(135 deg,#640d14);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar-menu a:hover {
+      background-color: rgba(242, 185, 40, 0.2);
+      color: var(--color-primary);
+    }
+    
+    .sidebar-menu a.active {
+      background-color: rgba(242, 185, 40, 0.3);
+      color: var(--color-primary);
+    }
+    
+    .sidebar-menu i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .dashboard-header h2 {
+      font-size: 1.8rem;
+      color: var(--color-primary);
+    }
+    
+    /* Date Range Selector */
+    .date-range {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .date-range select {
+      padding: 0.8rem 1rem;
+      border: 2px solid rgba(252, 253, 252, 0.2);
+      border-radius: 8px;
+      background: rgba(10, 30, 50, 0.5);
+      color: var(--color-light);
+      font-size: 1rem;
+      min-width: 180px;
+    }
+    
+    .date-range .custom-dates {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .date-range input[type="date"] {
+      padding: 0.8rem;
+      border: 2px solid rgba(252, 253, 252, 0.2);
+      border-radius: 8px;
+      background: rgba(10, 30, 50, 0.5);
+      color: var(--color-light);
+      font-size: 1rem;
+    }
+    
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+      color: var(--color-secondary);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(242, 185, 40, 0.4);
+    }
+    
+    .btn-secondary {
+      background: rgba(252, 253, 252, 0.1);
+      color: var(--color-light);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(252, 253, 252, 0.2);
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background:linear-gradient(135 deg,#f4f9e9);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s;
+      min-height: 140px;
+    }
+    
+    .stat-card.loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-card i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(#640d14);
+    }
+    
+    .stat-card h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-card p {
+      color:#640d14;
+      font-size: 0.9rem;
+    }
+    
+    .stat-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .trend-up {
+      color: var(--color-success);
+    }
+    
+    .trend-down {
+      color: var(--color-danger);
+    }
+    
+    /* Charts Container */
+    .charts-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+      background: rgba(252, 253, 252, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .chart-card h3 {
+      margin-bottom: 1.5rem;
+      color: var(--color-primary);
+    }
+    
+    .chart-container {
+      height: 300px;
+      position: relative;
+    }
+    
+    /* Report Sections */
+    .report-section {
+      background: rgba(252, 253, 252, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .report-section h3 {
+      margin-bottom: 1.5rem;
+      color: var(--color-primary);
+    }
+    
+    /* Table Styles */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    
+    .data-table th, .data-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(252, 253, 252, 0.1);
+    }
+    
+    .data-table th {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+    
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    /* Loading animation */
+    .loading-shimmer {
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        rgba(255, 255, 255, 0.1) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      height: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    /* Export Options */
+    .export-options {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: rgba(20, 50, 85, 0.9);
+      color: #d1e0ef;
+      font-weight: 500;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      .dashboard {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        padding: 1rem;
+      }
+      
+      .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      
+      .sidebar-menu li {
+        margin-bottom: 0;
+      }
+      
+      .sidebar-menu a {
+        padding: 0.5rem 0.8rem;
+      }
+      
+      .charts-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .date-range {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .date-range select, .date-range input[type="date"] {
+        min-width: 100%;
+      }
+      
+      .custom-dates {
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://via.placeholder.com/50x50/f2b928/143255?text=C" alt="Canary Logo">
+      <h1>Canary Inc.</h1>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">JD</div>
+      <div>
+        <p>John Doe</p>
+        <small>john.doe@example.com</small>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Dashboard Menu</h3>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html"><i class="fas fa-home"></i> Overview</a></li>
+        <li><a href="aliases.html"><i class="fas fa-envelope"></i> Aliases</a></li>
+        <li><a href="protection.html"><i class="fas fa-shield-alt"></i> Protection</a></li>
+        <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+        <li><a href="#" class="active"><i class="fas fa-chart-bar"></i> Reports</a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="dashboard-header">
+        <h2>Security Reports</h2>
+        <div class="export-options">
+          <button class="btn btn-secondary">
+            <i class="fas fa-download"></i> Export PDF
+          </button>
+          <button class="btn btn-secondary">
+            <i class="fas fa-file-csv"></i> Export CSV
+          </button>
+        </div>
+      </div>
+      
+      <!-- Date Range Selector -->
+      <div class="date-range">
+        <span>Report Period:</span>
+        <select id="timeRange">
+          <option value="7">Last 7 Days</option>
+          <option value="30" selected>Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+          <option value="365">Last 12 Months</option>
+          <option value="custom">Custom Range</option>
+        </select>
+        
+        <div class="custom-dates" id="customDates" style="display: none;">
+          <input type="date" id="startDate">
+          <span>to</span>
+          <input type="date" id="endDate">
+          <button class="btn btn-primary" id="applyDates">Apply</button>
+        </div>
+        
+        <button class="btn btn-primary" id="generateReport">
+          <i class="fas fa-sync-alt"></i> Generate Report
+        </button>
+      </div>
+      
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card loading" id="protectionScoreStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+        <div class="stat-card loading" id="breachesPreventedStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+        <div class="stat-card loading" id="aliasesCreatedStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+        <div class="stat-card loading" id="threatsBlockedStat">
+          <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+          <div class="loading-shimmer" style="width: 60%;"></div>
+        </div>
+      </div>
+      
+      <!-- Charts Container -->
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Threat Activity Over Time</h3>
+          <div class="chart-container" id="threatActivityChart">
+            <!-- Chart will be rendered by JavaScript -->
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h3>Alias Usage by Category</h3>
+          <div class="chart-container" id="aliasUsageChart">
+            <!-- Chart will be rendered by JavaScript -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Breach Report -->
+      <div class="report-section">
+        <h3>Data Breach Analysis</h3>
+        <div class="chart-container" id="breachAnalysisChart">
+          <!-- Chart will be rendered by JavaScript -->
+        </div>
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Breach Date</th>
+              <th>Aliases Affected</th>
+              <th>Action Taken</th>
+            </tr>
+          </thead>
+          <tbody id="breachTableBody">
+            <!-- Data will be populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Top Services Report -->
+      <div class="report-section">
+        <h3>Top Services by Alias Usage</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Aliases</th>
+              <th>Last Used</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="servicesTableBody">
+            <!-- Data will be populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p>⚡Canary — Stay ahead of the leaks.</p>
+  </footer>
+
+  <script>
+    // API endpoints (using JSONPlaceholder for demonstration)
+    const API_BASE = 'https://jsonplaceholder.typicode.com';
+    const REPORTS_ENDPOINT = '/posts'; // Simulating reports endpoint
+    
+    // State management
+    let appState = {
+      reportData: null,
+      timeRange: '30',
+      isLoading: true
+    };
+    
+    // DOM elements
+    const elements = {
+      timeRange: document.getElementById('timeRange'),
+      customDates: document.getElementById('customDates'),
+      startDate: document.getElementById('startDate'),
+      endDate: document.getElementById('endDate'),
+      applyDates: document.getElementById('applyDates'),
+      generateReport: document.getElementById('generateReport'),
+      protectionScoreStat: document.getElementById('protectionScoreStat'),
+      breachesPreventedStat: document.getElementById('breachesPreventedStat'),
+      aliasesCreatedStat: document.getElementById('aliasesCreatedStat'),
+      threatsBlockedStat: document.getElementById('threatsBlockedStat'),
+      threatActivityChart: document.getElementById('threatActivityChart'),
+      aliasUsageChart: document.getElementById('aliasUsageChart'),
+      breachAnalysisChart: document.getElementById('breachAnalysisChart'),
+      breachTableBody: document.getElementById('breachTableBody'),
+      servicesTableBody: document.getElementById('servicesTableBody')
+    };
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up event listeners
+      elements.timeRange.addEventListener('change', function() {
+        if (this.value === 'custom') {
+          elements.customDates.style.display = 'flex';
+        } else {
+          elements.customDates.style.display = 'none';
+          appState.timeRange = this.value;
+          fetchReportData();
+        }
+      });
+      
+      elements.applyDates.addEventListener('click', function() {
+        if (elements.startDate.value && elements.endDate.value) {
+          appState.timeRange = 'custom';
+          fetchReportData();
+        } else {
+          alert('Please select both start and end dates');
+        }
+      });
+      
+      elements.generateReport.addEventListener('click', fetchReportData);
+      
+      // Set default dates for custom range
+      const today = new Date();
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      elements.endDate.value = today.toISOString().split('T')[0];
+      elements.startDate.value = thirtyDaysAgo.toISOString().split('T')[0];
+      
+      // Load initial data
+      fetchReportData();
+    });
+    
+    // Fetch report data from API
+    async function fetchReportData() {
+      try {
+        appState.isLoading = true;
+        showLoadingState();
+        
+        // In a real app, this would be an actual API endpoint for report data
+        const response = await fetch(`${API_BASE}${REPORTS_ENDPOINT}?_limit=1`);
+        const reportData = await response.json();
+        
+        // Simulate our report data structure from the server
+        const serverReportData = generateReportData();
+        
+        // Update app state
+        appState.reportData = serverReportData;
+        appState.isLoading = false;
+        
+        // Update UI
+        updateReportUI();
+        
+      } catch (error) {
+        console.error('Error fetching report data:', error);
+        alert('Failed to load report data. Using demo data.');
+        
+        // Fallback to demo data
+        loadDemoData();
+      }
+    }
+    
+    // Generate sample report data
+    function generateReportData() {
+      // Generate dates for the selected time range
+      const days = parseInt(appState.timeRange) || 30;
+      const dates = [];
+      const today = new Date();
+      
+      for (let i = days - 1; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(today.getDate() - i);
+        dates.push(date.toISOString().split('T')[0]);
+      }
+      
+      // Generate threat activity data
+      const threatActivity = dates.map(date => {
+        return {
+          date: date,
+          threats: Math.floor(Math.random() * 20) + 1,
+          breaches: Math.floor(Math.random() * 5)
+        };
+      });
+      
+      // Generate alias usage by category
+      const categories = ['Shopping', 'Social Media', 'Finance', 'News', 'Entertainment', 'Work'];
+      const aliasUsage = categories.map(category => {
+        return {
+          category: category,
+          count: Math.floor(Math.random() * 100) + 20,
+          leaked: Math.floor(Math.random() * 10)
+        };
+      });
+      
+      // Generate breach analysis data
+      const services = ['ShopMax', 'SocialConnect', 'FinanceHub', 'NewsNow', 'StreamFlix', 'WorkSpace'];
+      const breachAnalysis = services.map(service => {
+        const breachDate = new Date();
+        breachDate.setDate(breachDate.getDate() - Math.floor(Math.random() * days));
+        
+        return {
+          service: service,
+          breachDate: breachDate.toISOString().split('T')[0],
+          aliasesAffected: Math.floor(Math.random() * 5) + 1,
+          action: Math.random() > 0.5 ? 'Auto-disabled' : 'Manual review'
+        };
+      });
+      
+      // Generate top services data
+      const topServices = services.map(service => {
+        const lastUsed = new Date();
+        lastUsed.setDate(lastUsed.getDate() - Math.floor(Math.random() * days));
+        
+        return {
+          service: service,
+          aliases: Math.floor(Math.random() * 8) + 2,
+          lastUsed: lastUsed.toISOString().split('T')[0],
+          status: Math.random() > 0.7 ? 'Leaked' : 'Active'
+        };
+      });
+      
+      // Sort by most aliases
+      topServices.sort((a, b) => b.aliases - a.aliases);
+      
+      return {
+        protectionScore: 85 + Math.floor(Math.random() * 15),
+        breachesPrevented: threatActivity.reduce((sum, day) => sum + day.breaches, 0),
+        aliasesCreated: aliasUsage.reduce((sum, category) => sum + category.count, 0),
+        threatsBlocked: threatActivity.reduce((sum, day) => sum + day.threats, 0),
+        threatActivity: threatActivity,
+        aliasUsage: aliasUsage,
+        breachAnalysis: breachAnalysis,
+        topServices: topServices,
+        generatedAt: new Date().toISOString()
+      };
+    }
+    
+    // Load demo data if API fails
+    function loadDemoData() {
+      appState.reportData = generateReportData();
+      appState.isLoading = false;
+      updateReportUI();
+    }
+    
+    // Show loading state
+    function showLoadingState() {
+      elements.protectionScoreStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.protectionScoreStat.classList.add('loading');
+      
+      elements.breachesPreventedStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.breachesPreventedStat.classList.add('loading');
+      
+      elements.aliasesCreatedStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.aliasesCreatedStat.classList.add('loading');
+      
+      elements.threatsBlockedStat.innerHTML = `
+        <div class="loading-shimmer" style="width: 80%; height: 2rem;"></div>
+        <div class="loading-shimmer" style="width: 60%;"></div>
+      `;
+      elements.threatsBlockedStat.classList.add('loading');
+      
+      // Clear charts and tables
+      elements.threatActivityChart.innerHTML = '<p>Loading chart data...</p>';
+      elements.aliasUsageChart.innerHTML = '<p>Loading chart data...</p>';
+      elements.breachAnalysisChart.innerHTML = '<p>Loading chart data...</p>';
+      elements.breachTableBody.innerHTML = '';
+      elements.servicesTableBody.innerHTML = '';
+    }
+    
+    // Update the report UI with data
+    function updateReportUI() {
+      if (!appState.reportData) return;
+      
+      const data = appState.reportData;
+      
+      // Update stats cards
+      updateStatCard(elements.protectionScoreStat, 'shield-alt', `${data.protectionScore}%`, 'Protection Score', '2%', 'up');
+      updateStatCard(elements.breachesPreventedStat, 'ban', data.breachesPrevented, 'Breaches Prevented', '15%', 'down');
+      updateStatCard(elements.aliasesCreatedStat, 'envelope', data.aliasesCreated, 'Aliases Created', '8%', 'up');
+      updateStatCard(elements.threatsBlockedStat, 'fire', data.threatsBlocked, 'Threats Blocked', '5%', 'down');
+      
+      // Render charts
+      renderThreatActivityChart(data.threatActivity);
+      renderAliasUsageChart(data.aliasUsage);
+      renderBreachAnalysisChart(data.aliasUsage);
+      
+      // Populate tables
+      populateBreachTable(data.breachAnalysis);
+      populateServicesTable(data.topServices);
+    }
+    
+    // Update a stat card
+    function updateStatCard(element, icon, value, label, trendValue, trendDirection) {
+      element.classList.remove('loading');
+      element.innerHTML = `
+        <i class="fas fa-${icon}"></i>
+        <h3>${value}</h3>
+        <p>${label}</p>
+        <div class="stat-trend ${trendDirection === 'up' ? 'trend-up' : 'trend-down'}">
+          <i class="fas fa-${trendDirection === 'up' ? 'arrow-up' : 'arrow-down'}"></i>
+          <span>${trendValue} ${trendDirection === 'up' ? 'increase' : 'decrease'}</span>
+        </div>
+      `;
+    }
+    
+    // Render threat activity chart
+    function renderThreatActivityChart(data) {
+      // In a real app, you would use a charting library like Chart.js
+      // For this example, we'll create a simple SVG chart
+      
+      const width = 600;
+      const height = 250;
+      const padding = 40;
+      
+      // Find max values for scaling
+      const maxThreats = Math.max(...data.map(d => d.threats));
+      const maxBreaches = Math.max(...data.map(d => d.breaches));
+      const maxValue = Math.max(maxThreats, maxBreaches);
+      
+      // Create SVG
+      elements.threatActivityChart.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
+          <!-- X-axis -->
+          <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="rgba(252,253,252,0.3)" />
+          
+          <!-- Y-axis -->
+          <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="rgba(252,253,252,0.3)" />
+          
+          <!-- Data points and lines -->
+          ${data.map((point, i) => {
+            const x = padding + (i * (width - 2 * padding) / (data.length - 1));
+            const yThreats = height - padding - (point.threats / maxValue * (height - 2 * padding));
+            const yBreaches = height - padding - (point.breaches / maxValue * (height - 2 * padding));
+            
+            return `
+              <!-- Threats -->
+              <circle cx="${x}" cy="${yThreats}" r="3" fill="${getColor('primary')}" />
+              ${i > 0 ? `
+                <line x1="${padding + ((i-1) * (width - 2 * padding) / (data.length - 1))}" 
+                      y1="${height - padding - (data[i-1].threats / maxValue * (height - 2 * padding))}" 
+                      x2="${x}" y2="${yThreats}" 
+                      stroke="${getColor('primary')}" stroke-width="2" />
+              ` : ''}
+              
+              <!-- Breaches -->
+              <circle cx="${x}" cy="${yBreaches}" r="3" fill="${getColor('danger')}" />
+              ${i > 0 ? `
+                <line x1="${padding + ((i-1) * (width - 2 * padding) / (data.length - 1))}" 
+                      y1="${height - padding - (data[i-1].breaches / maxValue * (height - 2 * padding))}" 
+                      x2="${x}" y2="${yBreaches}" 
+                      stroke="${getColor('danger')}" stroke-width="2" />
+              ` : ''}
+            `;
+          }).join('')}
+          
+          <!-- Legend -->
+          <g transform="translate(${width - 150}, 20)">
+            <rect x="0" y="0" width="15" height="15" fill="${getColor('primary')}" />
+            <text x="25" y="12" fill="#d1e0ef" font-size="12">Threats Detected</text>
+            
+            <rect x="0" y="25" width="15" height="15" fill="${getColor('danger')}" />
+            <text x="25" y="37" fill="#d1e0ef" font-size="12">Breaches Prevented</text>
+          </g>
+        </svg>
+      `;
+    }
+    
+    // Render alias usage chart
+    function renderAliasUsageChart(data) {
+      // Simple SVG pie chart for alias usage by category
+      const size = 200;
+      const radius = size / 2;
+      const center = size / 2;
+      
+      let total = data.reduce((sum, item) => sum + item.count, 0);
+      let currentAngle = -Math.PI / 2; // Start at top
+      
+      // Colors for categories
+      const colors = [
+        getColor('primary'),
+        getColor('info'),
+        getColor('success'),
+        getColor('warning'),
+        getColor('purple'),
+        getColor('accent')
+      ];
+      
+      elements.aliasUsageChart.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${size} ${size + 80}">
+          <!-- Pie chart -->
+          <g transform="translate(${center}, ${center})">
+            ${data.map((item, i) => {
+              const sliceAngle = (item.count / total) * 2 * Math.PI;
+              const x1 = Math.cos(currentAngle) * radius;
+              const y1 = Math.sin(currentAngle) * radius;
+              
+              const x2 = Math.cos(currentAngle + sliceAngle) * radius;
+              const y2 = Math.sin(currentAngle + sliceAngle) * radius;
+              
+              const largeArc = sliceAngle > Math.PI ? 1 : 0;
+              
+              const path = `
+                M 0 0
+                L ${x1} ${y1}
+                A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}
+                Z
+              `;
+              
+              currentAngle += sliceAngle;
+              
+              return `<path d="${path}" fill="${colors[i % colors.length]}" />`;
+            }).join('')}
+          </g>
+          
+          <!-- Legend -->
+          <g transform="translate(0, ${size + 20})">
+            ${data.map((item, i) => {
+              const y = i * 20;
+              const percentage = Math.round((item.count / total) * 100);
+              
+              return `
+                <rect x="0" y="${y}" width="15" height="15" fill="${colors[i % colors.length]}" />
+                <text x="25" y="${y + 12}" fill="#d1e0ef" font-size="12">
+                  ${item.category}: ${item.count} (${percentage}%)
+                </text>
+              `;
+            }).join('')}
+          </g>
+        </svg>
+      `;
+    }
+    
+    // Render breach analysis chart
+    function renderBreachAnalysisChart(data) {
+      // Simple bar chart for breach analysis
+      const width = 600;
+      const height = 250;
+      const padding = 40;
+      const barWidth = (width - 2 * padding) / data.length;
+      
+      // Find max value for scaling
+      const maxValue = Math.max(...data.map(d => d.leaked));
+      
+      elements.breachAnalysisChart.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}">
+          <!-- X-axis -->
+          <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="rgba(252,253,252,0.3)" />
+          
+          <!-- Y-axis -->
+          <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="rgba(252,253,252,0.3)" />
+          
+          <!-- Bars -->
+          ${data.map((item, i) => {
+            const x = padding + (i * barWidth) + (barWidth / 4);
+            const barHeight = (item.leaked / maxValue) * (height - 2 * padding);
+            const y = height - padding - barHeight;
+            
+            return `
+              <rect x="${x}" y="${y}" width="${barWidth / 2}" height="${barHeight}" fill="${getColor('danger')}" />
+              <text x="${x + (barWidth / 4)}" y="${height - padding + 15}" fill="#d1e0ef" font-size="10" text-anchor="middle">
+                ${item.category}
+              </text>
+              <text x="${x + (barWidth / 4)}" y="${y - 5}" fill="#d1e0ef" font-size="10" text-anchor="middle">
+                ${item.leaked}
+              </text>
+            `;
+          }).join('')}
+        </svg>
+      `;
+    }
+    
+    // Populate breach table
+    function populateBreachTable(data) {
+      elements.breachTableBody.innerHTML = data.map(item => `
+        <tr>
+          <td>${item.service}</td>
+          <td>${formatDate(item.breachDate)}</td>
+          <td>${item.aliasesAffected}</td>
+          <td>${item.action}</td>
+        </tr>
+      `).join('');
+    }
+    
+    // Populate services table
+    function populateServicesTable(data) {
+      elements.servicesTableBody.innerHTML = data.map(item => `
+        <tr>
+          <td>${item.service}</td>
+          <td>${item.aliases}</td>
+          <td>${formatDate(item.lastUsed)}</td>
+          <td>
+            <span style="color: ${item.status === 'Active' ? getColor('success') : getColor('danger')}">
+              ${item.status}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    // Helper function to get color
+    function getColor(name) {
+      const colors = {
+        primary: '#f2b928',
+        secondary: '#143255',
+        accent: '#e6a117',
+        danger: '#e74c3c',
+        success: '#2ecc71',
+        warning: '#f39c12',
+        info: '#3498db',
+        purple: '#9b59b6'
+      };
+      
+      return colors[name] || '#ffffff';
+    }
+    
+    // Helper function to format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+  </script>
+</body>
+</html>

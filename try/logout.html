@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logged Out - Canary</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --color-bg: #f9f9e9;       /* Creamy light background */
+  --color-primary: #6e1f1f;  /* Dark maroon for headings/buttons */
+  --color-secondary: #7a3c3c;/* Softer maroon */
+  --color-light: #fff;
+  --color-dark: #333;
+  --color-accent: #d86f3d;   /* Burnt orange accent */
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+  background: #fffaf2;
+  border: 2px solid var(--color-primary);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.8s ease-out;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.logo img {
+  height: 70px;
+  width: 70px;
+  margin-right: 15px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.logo h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.status-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fff4e8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2.5rem;
+  color: var(--color-accent);
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+p {
+  color: var(--color-dark);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-light);
+}
+
+.btn-primary:hover {
+  background: var(--color-secondary);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-light);
+}
+
+.security-tips {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.security-tips h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.security-tips ul {
+  list-style: none;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.security-tips li {
+  padding: 0.5rem 0;
+  color: var(--color-dark);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.security-tips li i {
+  color: var(--color-accent);
+  margin-top: 0.2rem;
+}
+
+footer {
+  margin-top: 3rem;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="logo3.jpg" alt="Canary Logo">
+      <h1>Canary Inc.</h1>
+    </div>
+    
+    <div class="status-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    
+    <h2>You've Been Logged Out</h2>
+    <p>You have successfully logged out of your Canary account. Thank you for using our service to protect your digital identity.</p>
+    
+    <div class="button-group">
+      <a href="login.html" class="btn btn-primary">
+        <i class="fas fa-sign-in-alt"></i> Log In Again
+      </a>
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i> Back to Home
+      </a>
+    </div>
+    
+    <div class="security-tips">
+      <h3><i class="fas fa-shield-alt"></i> Security Tips</h3>
+      <ul>
+        <li>
+          <i class="fas fa-check-circle"></i>
+          <span>Always log out from your accounts when using shared devices</span>
+        </li>
+        <li>
+          <i class="fas fa-check-circle"></i>
+          <span>Use unique, strong passwords for each online account</span>
+        </li>
+        <li>
+          <i class="fas fa-check-circle"></i>
+          <span>Enable two-factor authentication for added security</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <footer>
+    <p>⚡Canary — Catch the leak before it catches you.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Simulate logout process
+      console.log('Logout successful');
+      
+      // Clear any stored user data (in a real application)
+      // localStorage.removeItem('userToken');
+      // sessionStorage.removeItem('userSession');
+      
+      // Set a timeout to redirect to homepage after 30 seconds
+      const redirectTimer = setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 30000);
+      
+      // Clear the timer if user interacts with the page
+      document.addEventListener('click', function() {
+        clearTimeout(redirectTimer);
+      });
+    });
+  </script>
+</body>
+</html>
